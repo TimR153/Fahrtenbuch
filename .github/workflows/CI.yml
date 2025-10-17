@@ -21,8 +21,6 @@ jobs:
 
       - name: Install .NET WASM Build Tools
         run: dotnet workload install wasm-tools
-      - name: Install .NET MAUI Build Tools
-        run: dotnet workload install maui macos wasm-tools
 
       # Blazor Web
       - name: Restore Blazor Web
