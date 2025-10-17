@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +20,9 @@ jobs:
       run: dotnet workload restore
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Build Android und Windows
+      run: |
+        dotnet build -f net9.0-android --no-restore
+        dotnet build -f net9.0-windows --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
