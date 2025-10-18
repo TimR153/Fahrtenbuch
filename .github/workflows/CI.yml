@@ -32,7 +32,7 @@ jobs:
         run: dotnet build ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj --configuration Release --no-restore
 
       # Android      
-      - name: Restore dependencies
-        run: dotnet restore ./Fahrtenbuch/Fahrtenbuch.csproj --framework net9.0-android
+      - name: Restore Android
+        run: dotnet restore ./Fahrtenbuch/Fahrtenbuch.csproj /p:TargetFramework=net9.0-android
       - name: Build Android
         run: dotnet build ./Fahrtenbuch/Fahrtenbuch.csproj -f net9.0-android --configuration Release --no-restore
