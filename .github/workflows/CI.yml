@@ -28,13 +28,11 @@ jobs:
       # Blazor Web
       - name: Restore Blazor Web
         run: dotnet restore ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj
-
       - name: Build Blazor Web
         run: dotnet build ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj --configuration Release --no-restore
 
-      # MAUI      
-      - name: Restore MAUI project
-        run: dotnet restore ./Fahrtenbuch/Fahrtenbuch.csproj
-      
-      - name: Build MAUI project
-        run: dotnet build ./Fahrtenbuch/Fahrtenbuch.csproj --configuration Release --no-restore
+      # Android      
+      - name: Restore dependencies
+        run: dotnet restore -f net9.0-android
+      - name: Build Android
+        run: dotnet build -f net9.0-android --configuration Release --no-restore
