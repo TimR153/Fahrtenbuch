@@ -1,6 +1,7 @@
 ﻿using Fahrtenbuch.Services;
 using Fahrtenbuch.Shared.Services;
 using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 
 namespace Fahrtenbuch
 {
@@ -16,7 +17,7 @@ namespace Fahrtenbuch
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-            // Add device-specific services used by the Fahrtenbuch.Shared project
+            builder.Services.AddMudServices();
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
             builder.Services.AddMauiBlazorWebView();

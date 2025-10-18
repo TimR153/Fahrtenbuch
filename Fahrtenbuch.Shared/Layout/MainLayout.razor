@@ -1,23 +1,44 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar>
+        <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
+            <MudLink Href="/" >
+                <MudImage Src="_content/Fahrtenbuch.Shared/favicon.png"
+                          Alt="App Logo"
+                          Width="32" />
+            </MudLink>
+            <MudIconButton OnClick="DrawerToggle"
+                           Icon="@Icons.Material.Rounded.Notes"
+                           Color="Color.Inherit"
+                           Edge="Edge.Start" />
+        </MudStack>
+        <MudSpacer />
+        <MudIconButton Icon="@DarkLightModeButtonIcon"
+                       OnClick="DarkModeToggle"
+                       Color="Color.Inherit"
+                       Edge="Edge.End" />
+    </MudAppBar>
+
+
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">@Constants.AppName</MudText>
+
+        </MudDrawerHeader>
         <NavMenu />
-    </div>
+    </MudDrawer>h
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+    <MudMainContent>
+        <MudContainer Class="pt-1">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+</MudLayout>
+
