@@ -1,59 +1,42 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="@IsDarkMode" />
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="0" Dense="true">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
-        <MudText Typo="Typo.h5" Class="ml-3">@Constants.AppName</MudText>
+    <MudAppBar>
+        <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
+            <MudImage Src="_content/Fahrtenbuch.Shared/favicon.png"
+                      Alt="App Logo"
+                      Width="32" />
+            <MudIconButton OnClick="DrawerToggle"
+                           Icon="@Icons.Material.Rounded.Notes"
+                           Color="Color.Inherit"
+                           Edge="Edge.Start" />
+        </MudStack>
         <MudSpacer />
-
-        <DarkModeSwitch OnDarkModeChanged="OnDarkModeChanged" />
-
+        <MudIconButton Icon="@DarkLightModeButtonIcon"
+                       OnClick="DarkModeToggle"
+                       Color="Color.Inherit"
+                       Edge="Edge.End" />
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        
+
+
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">@Constants.AppName</MudText>
+
+        </MudDrawerHeader>
         <NavMenu />
+    </MudDrawer>h
 
-    </MudDrawer>
-    <MudMainContent Class="mt-16 pa-4">
-
-        @Body
-
-        <MudScrollToTop>
-            <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowUpward" />
-        </MudScrollToTop>
+    <MudMainContent>
+        <MudContainer Class="pt-1">
+            @Body
+        </MudContainer>
     </MudMainContent>
+
 </MudLayout>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
-
-@code {
-    #region darkmode switch
-
-    public bool IsDarkMode { get; set; }
-
-    private void OnDarkModeChanged(bool isDarkMode)
-    {
-        IsDarkMode = isDarkMode;
-    }
-
-    #endregion
-
-    #region drawer
-
-    private bool _drawerOpen = true;
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
-    #endregion
-}
