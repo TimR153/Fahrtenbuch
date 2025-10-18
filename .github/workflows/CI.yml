@@ -27,11 +27,11 @@ jobs:
         run: dotnet restore ./Web/Web.csproj
 
       - name: Build Blazor Web
-        run: dotnet build ./Web/Web.csproj --configuration Release --no-restore
+        run: dotnet build ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj --configuration Release --no-restore
 
       # Android
       - name: Restore Android
-        run: dotnet restore ./MAUI/MAUI.csproj -f net9.0-android
+        run: dotnet restore ./Fahrtenbuch/Fahrtenbuch.csproj -f net9.0-android
 
       - name: Build Android
-        run: dotnet build ./MAUI/MAUI.csproj -f net9.0-android --configuration Release --no-restore
+        run: dotnet build ./Fahrtenbuch/Fahrtenbuch.csproj -f net9.0-android --configuration Release --no-restore
