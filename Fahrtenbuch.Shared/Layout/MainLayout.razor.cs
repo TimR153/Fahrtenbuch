@@ -66,5 +66,10 @@ namespace Fahrtenbuch.Shared.Layout
         {
             _isDarkMode = !_isDarkMode;
         }
+
+        private async Task Login()
+        {
+
+        }
     }
 }

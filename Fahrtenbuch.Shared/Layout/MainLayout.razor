@@ -8,7 +8,7 @@
 <MudLayout>
     <MudAppBar>
         <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
-            <MudLink Href="/" >
+            <MudLink Href="/">
                 <MudImage Src="_content/Fahrtenbuch.Shared/favicon.png"
                           Alt="App Logo"
                           Width="32" />
@@ -19,10 +19,16 @@
                            Edge="Edge.Start" />
         </MudStack>
         <MudSpacer />
-        <MudIconButton Icon="@DarkLightModeButtonIcon"
-                       OnClick="DarkModeToggle"
-                       Color="Color.Inherit"
-                       Edge="Edge.End" />
+        <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
+            <MudIconButton Icon="@DarkLightModeButtonIcon"
+                           OnClick="DarkModeToggle"
+                           Color="Color.Inherit"
+                           Edge="Edge.End" />
+            <MudIconButton Icon="@Icons.Material.Rounded.Login"
+                           OnClick="Login"
+                           Color="Color.Inherit"
+                           Edge="Edge.End" />
+        </MudStack>
     </MudAppBar>
 
 
@@ -32,7 +38,7 @@
 
         </MudDrawerHeader>
         <NavMenu />
-    </MudDrawer>h
+    </MudDrawer>
 
     <MudMainContent>
         <MudContainer Class="pt-1">
