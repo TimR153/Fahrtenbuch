@@ -1,0 +1,45 @@
+﻿@inject IAuthService AuthService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView>
+    <Authorized>
+        <MudMenu Label="@userName" StartIcon="@Icons.Material.Filled.Person" Color="Color.Inherit">
+            <MudMenuItem OnClick="@OpenSettings" Icon="@Icons.Material.Filled.Settings" Label="Einstellungen" />
+            <MudMenuItem OnClick="@LogoutAsync" Icon="@Icons.Material.Filled.Logout" Label="Logout"/>
+        </MudMenu>
+    </Authorized>
+    <NotAuthorized>
+        <MudButton OnClick="LoginAsync" Color="Color.Inherit" Variant="Variant.Text" StartIcon="@Icons.Material.Rounded.Login">
+            Login
+        </MudButton>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        userName = user?.FindFirst("nickname")?.Value
+                   ?? user?.FindFirst("name")?.Value
+                   ?? "Unbekannter Benutzer";
+    }
+
+    private async Task LoginAsync()
+    {
+        await AuthService.LoginAsync();
+    }
+
+    private async Task LogoutAsync()
+    {
+        await AuthService.LogoutAsync();
+    }
+
+    private async Task OpenSettings()
+    {
+
+    }
+}

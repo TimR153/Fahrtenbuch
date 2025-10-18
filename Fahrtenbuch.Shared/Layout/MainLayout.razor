@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Fahrtenbuch.Shared.Pages
+@using Fahrtenbuch.Shared.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudPopoverProvider />
@@ -24,10 +27,7 @@
                            OnClick="DarkModeToggle"
                            Color="Color.Inherit"
                            Edge="Edge.End" />
-            <MudIconButton Icon="@Icons.Material.Rounded.Login"
-                           OnClick="Login"
-                           Color="Color.Inherit"
-                           Edge="Edge.End" />
+            <Login />
         </MudStack>
     </MudAppBar>
 
