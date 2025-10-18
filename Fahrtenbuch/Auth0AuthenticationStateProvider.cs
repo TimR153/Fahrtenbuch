@@ -6,27 +6,19 @@ namespace Fahrtenbuch.Shared.Services
 {
     public class Auth0AuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly IAuth0Client _auth0Client;
         private ClaimsPrincipal _user = new ClaimsPrincipal(new ClaimsIdentity());
-        public Auth0AuthenticationStateProvider(IAuth0Client auth0Client) => _auth0Client = auth0Client;
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
             => Task.FromResult(new AuthenticationState(_user));
 
-        public async Task LogInAsync()
+        public void NotifyUserAuthentication(ClaimsPrincipal user)
         {
-            var loginResult = await _auth0Client.LoginAsync();
-            if (!loginResult.IsError)
-                _user = loginResult.User;
-            else
-                _user = new ClaimsPrincipal(new ClaimsIdentity());
-
+            _user = user ?? new ClaimsPrincipal(new ClaimsIdentity());
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public async Task LogOutAsync()
+        public void NotifyUserLogout()
         {
-            await _auth0Client.LogoutAsync();
             _user = new ClaimsPrincipal(new ClaimsIdentity());
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }

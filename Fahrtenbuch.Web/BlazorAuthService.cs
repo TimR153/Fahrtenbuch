@@ -1,4 +1,4 @@
-﻿using Fahrtenbuch.Shared;
+﻿using Fahrtenbuch.Shared.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace Fahrtenbuch.Web

@@ -1,4 +1,5 @@
-﻿@inject IAuthService AuthService
+﻿@using Fahrtenbuch.Shared.Services
+@inject IAuthService AuthService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <AuthorizeView>
@@ -9,7 +10,7 @@
         </MudMenu>
     </Authorized>
     <NotAuthorized>
-        <MudButton OnClick="LoginAsync" Color="Color.Inherit" Variant="Variant.Text" StartIcon="@Icons.Material.Rounded.Login">
+        <MudButton OnClick="LoginAsync" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.Login">
             Login
         </MudButton>
     </NotAuthorized>
@@ -20,22 +21,28 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        userName = user?.FindFirst("nickname")?.Value
-                   ?? user?.FindFirst("name")?.Value
-                   ?? "Unbekannter Benutzer";
+        await GetUserName();
     }
 
     private async Task LoginAsync()
     {
         await AuthService.LoginAsync();
+        await GetUserName();
     }
 
     private async Task LogoutAsync()
     {
         await AuthService.LogoutAsync();
+    }
+
+    private async Task GetUserName()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        userName = user?.FindFirst("name")?.Value
+                   ?? user?.FindFirst("nickname")?.Value
+                   ?? "Unbekannter Benutzer";
     }
 
     private async Task OpenSettings()

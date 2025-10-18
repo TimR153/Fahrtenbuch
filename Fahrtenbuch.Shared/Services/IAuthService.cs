@@ -1,4 +1,4 @@
-﻿namespace Fahrtenbuch.Shared
+﻿namespace Fahrtenbuch.Shared.Services
 {
     public interface IAuthService
     {
