@@ -2,10 +2,13 @@
 using Fahrtenbuch.Shared.Services;
 using System.Security.Claims;
 
-namespace Fahrtenbuch
+namespace Fahrtenbuch.Services
 {
     public class MauiAuthService : IAuthService
     {
+        private const string AccessTokenKey = "access_token";
+        private const string IdTokenKey = "id_token";
+
         private readonly Auth0Client _auth0Client;
         private readonly Auth0AuthenticationStateProvider _authStateProvider;
 
@@ -30,10 +33,10 @@ namespace Fahrtenbuch
                 throw new Exception(loginResult.Error);
             }
 
-            await SecureStorage.SetAsync("access_token", loginResult.AccessToken);
-            await SecureStorage.SetAsync("id_token", loginResult.IdentityToken);
+            await SecureStorage.SetAsync(AccessTokenKey, loginResult.AccessToken);
+            await SecureStorage.SetAsync(IdTokenKey, loginResult.IdentityToken);
 
-            var identity = new ClaimsIdentity(loginResult.User.Claims, "Auth0");
+            var identity = new ClaimsIdentity(loginResult.User.Claims, Constants.Auth0Claim);
             var user = new ClaimsPrincipal(identity);
 
             MainThread.BeginInvokeOnMainThread(() =>
@@ -47,8 +50,8 @@ namespace Fahrtenbuch
         {
             await _auth0Client.LogoutAsync();
 
-            SecureStorage.Remove("access_token");
-            SecureStorage.Remove("id_token");
+            SecureStorage.Remove(AccessTokenKey);
+            SecureStorage.Remove(IdTokenKey);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {

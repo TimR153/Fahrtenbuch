@@ -1,6 +1,6 @@
 using Auth0.AspNetCore.Authentication;
+using Fahrtenbuch.Shared;
 using Fahrtenbuch.Shared.Services;
-using Fahrtenbuch.Web;
 using Fahrtenbuch.Web.Components;
 using Fahrtenbuch.Web.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -34,7 +34,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapGet("/Account/Login", async (HttpContext httpContext, string returnUrl = "/") =>
+app.MapGet(Fahrtenbuch.Web.Constants.LoginPath, async (HttpContext httpContext, string returnUrl = "/") =>
 {
     var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
             .WithRedirectUri(returnUrl)
@@ -43,7 +43,7 @@ app.MapGet("/Account/Login", async (HttpContext httpContext, string returnUrl = 
     await httpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
 });
 
-app.MapGet("/Account/Logout", async (HttpContext httpContext) =>
+app.MapGet(Fahrtenbuch.Web.Constants.LogoutPath, async (HttpContext httpContext) =>
 {
     var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
             .WithRedirectUri("/")

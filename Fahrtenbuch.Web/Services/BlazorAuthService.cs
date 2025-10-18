@@ -1,7 +1,7 @@
 ﻿using Fahrtenbuch.Shared.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace Fahrtenbuch.Web
+namespace Fahrtenbuch.Web.Services
 {
     public class BlazorAuthService : IAuthService
     {
@@ -14,13 +14,13 @@ namespace Fahrtenbuch.Web
 
         public Task LoginAsync(string returnUrl = "/")
         {
-            _navigationManager.NavigateTo("/Account/Login", forceLoad: true);
+            _navigationManager.NavigateTo(Constants.LoginPath, forceLoad: true);
             return Task.CompletedTask;
         }
 
         public Task LogoutAsync()
         {
-            _navigationManager.NavigateTo("/Account/Logout", forceLoad: true);
+            _navigationManager.NavigateTo(Constants.LogoutPath, forceLoad: true);
             return Task.CompletedTask;
         }
     }
