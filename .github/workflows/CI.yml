@@ -24,7 +24,7 @@ jobs:
 
       # Blazor Web
       - name: Restore Blazor Web
-        run: dotnet restore ./Web/Web.csproj
+        run: dotnet restore ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj
 
       - name: Build Blazor Web
         run: dotnet build ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj --configuration Release --no-restore
