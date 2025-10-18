@@ -1,5 +1,7 @@
-﻿using Fahrtenbuch.Services;
+﻿using Auth0.OidcClient;
+using Fahrtenbuch.Services;
 using Fahrtenbuch.Shared.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 
@@ -19,7 +21,10 @@ namespace Fahrtenbuch
 
             builder.Services.AddMudServices();
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
-
+            builder.Services.AddSingleton<IAuthService, MauiAuthService>();
+            builder.Services.AddSingleton<Auth0AuthenticationStateProvider>();
+            builder.Services.AddSingleton<AuthenticationStateProvider>(sp => sp.GetRequiredService<Auth0AuthenticationStateProvider>());
+            builder.Services.AddAuthorizationCore();
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG

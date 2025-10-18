@@ -25,7 +25,7 @@
     <ApplicationTitle>Fahrtenbuch</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.fahrtenbuch</ApplicationId>
+    <ApplicationId>de.rentrop.fahrtenbuch</ApplicationId>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -61,6 +61,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Auth0.OidcClient.MAUI" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.77.1" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />

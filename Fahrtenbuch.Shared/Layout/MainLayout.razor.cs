@@ -15,7 +15,7 @@ namespace Fahrtenbuch.Shared.Layout
             {
                 Primary = MudBlazor.Colors.Blue.Darken2,
                 Secondary = MudBlazor.Colors.Blue.Accent2,
-                AppbarBackground = MudBlazor.Colors.Blue.Darken4,
+                AppbarBackground = MudBlazor.Colors.Gray.Darken1,
                 DrawerBackground = MudBlazor.Colors.Gray.Lighten1,
                 Background = MudBlazor.Colors.Gray.Lighten2,
                 DrawerText = MudBlazor.Colors.Gray.Darken4
@@ -27,7 +27,6 @@ namespace Fahrtenbuch.Shared.Layout
                 TextPrimary = MudBlazor.Colors.Gray.Lighten3,
                 DrawerText = MudBlazor.Colors.Gray.Lighten2
             },
-
             LayoutProperties = new LayoutProperties()
             {
                 DrawerWidthLeft = "260px",

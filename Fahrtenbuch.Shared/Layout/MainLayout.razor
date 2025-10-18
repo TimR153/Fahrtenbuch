@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Fahrtenbuch.Shared.Pages
+@using Fahrtenbuch.Shared.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudPopoverProvider />
@@ -8,7 +11,7 @@
 <MudLayout>
     <MudAppBar>
         <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
-            <MudLink Href="/" >
+            <MudLink Href="/">
                 <MudImage Src="_content/Fahrtenbuch.Shared/favicon.png"
                           Alt="App Logo"
                           Width="32" />
@@ -19,10 +22,13 @@
                            Edge="Edge.Start" />
         </MudStack>
         <MudSpacer />
-        <MudIconButton Icon="@DarkLightModeButtonIcon"
-                       OnClick="DarkModeToggle"
-                       Color="Color.Inherit"
-                       Edge="Edge.End" />
+        <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
+            <MudIconButton Icon="@DarkLightModeButtonIcon"
+                           OnClick="DarkModeToggle"
+                           Color="Color.Inherit"
+                           Edge="Edge.End" />
+            <Login />
+        </MudStack>
     </MudAppBar>
 
 
@@ -32,7 +38,7 @@
 
         </MudDrawerHeader>
         <NavMenu />
-    </MudDrawer>h
+    </MudDrawer>
 
     <MudMainContent>
         <MudContainer Class="pt-1">
