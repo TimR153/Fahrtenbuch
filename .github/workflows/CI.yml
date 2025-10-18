@@ -22,6 +22,9 @@ jobs:
       - name: Install .NET WASM Build Tools
         run: dotnet workload install wasm-tools
 
+      - name: Restore workloads
+        run: dotnet workload restore
+
       # Blazor Web
       - name: Restore Blazor Web
         run: dotnet restore ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj
@@ -29,9 +32,9 @@ jobs:
       - name: Build Blazor Web
         run: dotnet build ./Fahrtenbuch.Web/Fahrtenbuch.Web.csproj --configuration Release --no-restore
 
-      # MAUI
-      - name: Restore MAUI
+      # MAUI      
+      - name: Restore MAUI project
         run: dotnet restore ./Fahrtenbuch/Fahrtenbuch.csproj
-
-      - name: Build MAUI
+      
+      - name: Build MAUI project
         run: dotnet build ./Fahrtenbuch/Fahrtenbuch.csproj --configuration Release --no-restore
