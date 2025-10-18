@@ -33,6 +33,6 @@ jobs:
 
       # Android      
       - name: Restore dependencies
-        run: dotnet restore -f net9.0-android
+        run: dotnet restore ./Fahrtenbuch/Fahrtenbuch.csproj -f net9.0-android
       - name: Build Android
-        run: dotnet build -f net9.0-android --configuration Release --no-restore
+        run: dotnet build ./Fahrtenbuch/Fahrtenbuch.csproj -f net9.0-android --configuration Release --no-restore
