@@ -8,9 +8,11 @@
 <MudLayout>
     <MudAppBar>
         <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
-            <MudImage Src="_content/Fahrtenbuch.Shared/favicon.png"
-                      Alt="App Logo"
-                      Width="32" />
+            <MudLink Href="/" >
+                <MudImage Src="_content/Fahrtenbuch.Shared/favicon.png"
+                          Alt="App Logo"
+                          Width="32" />
+            </MudLink>
             <MudIconButton OnClick="DrawerToggle"
                            Icon="@Icons.Material.Rounded.Notes"
                            Color="Color.Inherit"
