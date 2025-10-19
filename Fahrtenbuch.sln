@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fahrtenbuch.Shared", "Fahrt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fahrtenbuch.Web", "Fahrtenbuch.Web\Fahrtenbuch.Web.csproj", "{DB26B901-B4CB-459A-99F5-27A212067239}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fahrtenbuch.Web.Api", "Fahrtenbuch.Web.Api\Fahrtenbuch.Web.Api.csproj", "{A3648934-85A2-4955-8D2C-C5C3A7D69B63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{DB26B901-B4CB-459A-99F5-27A212067239}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB26B901-B4CB-459A-99F5-27A212067239}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB26B901-B4CB-459A-99F5-27A212067239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3648934-85A2-4955-8D2C-C5C3A7D69B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3648934-85A2-4955-8D2C-C5C3A7D69B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3648934-85A2-4955-8D2C-C5C3A7D69B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3648934-85A2-4955-8D2C-C5C3A7D69B63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
