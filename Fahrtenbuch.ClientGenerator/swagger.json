@@ -6,6 +6,26 @@
     "version": "v1"
   },
   "paths": {
+    "/api/private": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "operationId": "Api_Private",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
