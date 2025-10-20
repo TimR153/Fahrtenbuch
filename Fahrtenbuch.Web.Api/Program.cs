@@ -30,11 +30,7 @@ builder.Services.AddOpenApiDocument(config =>
     config.Version = "v1";
 });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("KannFahrtenLesen", policy =>
-        policy.RequireClaim("scope", "read:messages"));
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
