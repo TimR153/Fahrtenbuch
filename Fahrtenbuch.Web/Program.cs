@@ -1,7 +1,6 @@
 using Auth0.AspNetCore.Authentication;
 using Fahrtenbuch.Shared;
 using Fahrtenbuch.Shared.Services;
-using Fahrtenbuch.Web;
 using Fahrtenbuch.Web.AuthenticationStateSyncer;
 using Fahrtenbuch.Web.Components;
 using Fahrtenbuch.Web.Services;

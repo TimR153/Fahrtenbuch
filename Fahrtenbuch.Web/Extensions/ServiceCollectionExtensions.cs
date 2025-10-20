@@ -1,4 +1,6 @@
-﻿namespace Fahrtenbuch.Web.Extensions
+﻿using Fahrtenbuch.Web.AuthenticationStateSyncer;
+
+namespace Fahrtenbuch.Web.Extensions
 {
     public static class ServiceCollectionExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
 
-namespace Fahrtenbuch.Web
+namespace Fahrtenbuch.Web.AuthenticationStateSyncer
 {
     public class TokenHandler : DelegatingHandler
     {

@@ -1,4 +1,4 @@
-namespace Fahrtenbuch.Web.Api
+namespace Fahrtenbuch.Web.Api.Models
 {
     public class WeatherForecast
     {

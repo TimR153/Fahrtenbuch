@@ -1,4 +1,4 @@
-using Fahrtenbuch.Web.Api;
+using Fahrtenbuch.Web.Api.Authentification;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;

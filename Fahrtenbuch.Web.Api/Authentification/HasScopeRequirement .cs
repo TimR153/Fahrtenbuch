@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Fahrtenbuch.Web.Api
+namespace Fahrtenbuch.Web.Api.Authentification
 {
     public class HasScopeRequirement : IAuthorizationRequirement
     {
