@@ -1,0 +1,36 @@
+﻿@page "/settings"
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<MudPaper Class="pa-4" Elevation="4">
+
+    @if (user == null)
+    {
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+    }
+    else
+    {
+        <MudList T="string" Dense="true">
+
+            <MudListItem><b>Name:</b> @user.FindFirst("name")?.Value</MudListItem>
+            <MudListItem><b>E-Mail:</b> @user.FindFirst("email")?.Value</MudListItem>
+            <MudListItem><b>Nickname:</b> @user.FindFirst("nickname")?.Value</MudListItem>
+            <MudListItem><b>Sprache:</b> @user.FindFirst("locale")?.Value</MudListItem>
+            
+            @if (user.Claims.Any(c => c.Type == ClaimTypes.Role))
+            {
+                <MudListItem><b>Rollen:</b> @string.Join(", ", user.FindAll(ClaimTypes.Role).Select(r => r.Value))</MudListItem>
+            }
+        </MudList>
+    }
+</MudPaper>
+
+@code {
+    private ClaimsPrincipal? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+    }
+}

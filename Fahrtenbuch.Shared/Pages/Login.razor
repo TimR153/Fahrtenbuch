@@ -1,6 +1,7 @@
 ﻿@using Fahrtenbuch.Shared.Services
 @inject IAuthService AuthService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <AuthorizeView>
     <Authorized>
@@ -47,6 +48,6 @@
 
     private async Task OpenSettings()
     {
-
+        NavigationManager.NavigateTo("/settings");
     }
 }

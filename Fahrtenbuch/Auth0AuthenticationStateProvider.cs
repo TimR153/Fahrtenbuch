@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace Fahrtenbuch.Shared.Services
+namespace Fahrtenbuch
 {
     public class Auth0AuthenticationStateProvider : AuthenticationStateProvider
     {
