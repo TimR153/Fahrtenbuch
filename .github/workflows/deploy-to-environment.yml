@@ -22,22 +22,21 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.stage }}
+    environment: ${{ github.event.inputs.stage }}  # Wählt das passende GitHub Environment
     steps:
       - name: Show deployment info
         run: |
-          echo "Deploying image ${IMAGE_NAME}:${{ github.event.inputs.image_tag }} to stage ${{ github.event.inputs.stage }} on port ${{ secrets.DEPLOY_PORT }}"
+          echo "Deploying image ${IMAGE_NAME}:${{ github.event.inputs.image_tag }} to stage ${{ github.event.inputs.stage }} at host ${{ secrets.HOST }} on port ${{ secrets.DEPLOY_PORT }}"
 
       - name: Deploy application via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets[ github.event.inputs.stage | toUpperCase() + '_HOST' ] }}
-          key: ${{ secrets[ github.event.inputs.stage | toUpperCase() + '_SSH_PRIVATE_KEY' ] }}
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
           script: |
             PORT=${{ secrets.DEPLOY_PORT }}
             CONTAINER_NAME="fahrtenbuch-${{ github.event.inputs.stage }}"
-
             docker pull ${IMAGE_NAME}:${{ github.event.inputs.image_tag }}
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
