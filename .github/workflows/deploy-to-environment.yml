@@ -1,0 +1,78 @@
+name: Deploy to Stage
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag to deploy (z.B. Commit-SHA)'
+        required: true
+      stage:
+        description: 'Deployment stage'
+        required: true
+        type: choice
+        options:
+          - quality
+          - staging
+          - production
+        default: quality
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.stage }}
+    steps:
+      - name: Deploy Web API
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script: |
+            # Prüfen, ob PostgreSQL läuft, sonst starten
+            if ! docker ps --filter "name=pg-fahrtenbuch" --format '{{.Names}}' | grep -q pg-fahrtenbuch; then
+              echo "Starte PostgreSQL"
+              docker run -d --name pg-fahrtenbuch \
+                -e POSTGRES_USER=${{ secrets.DB_USER }} \
+                -e POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
+                -e POSTGRES_DB=${{ secrets.DB_NAME }} \
+                -v pgdata:/var/lib/postgresql/data \
+                postgres:15
+            else
+              echo "PostgreSQL läuft bereits"
+            fi
+            
+            # Deployment der Web API
+            PORT=${{ secrets.API_DEPLOY_PORT }}
+            CONTAINER_NAME="fahrtenbuch-webapi-${{ github.event.inputs.stage }}"
+            IMAGE_NAME="tim153/fahrtenbuch-webapi"
+            docker pull $IMAGE_NAME:${{ github.event.inputs.image_tag }}
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+            docker run -d --name $CONTAINER_NAME -p $PORT:80 \
+              -e "DOTNET_ENVIRONMENT=${{ github.event.inputs.stage }}" \
+              -e "ConnectionStrings__DefaultConnection=Host=pg-fahrtenbuch;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
+              -e "Auth0__Domain=${{ secrets.AUTH0_DOMAIN }}" \
+              -e "Auth0__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
+              $IMAGE_NAME:${{ github.event.inputs.image_tag }}
+
+      - name: Deploy Blazor Web
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script: |
+            PORT=${{ secrets.WEB_DEPLOY_PORT }}
+            CONTAINER_NAME="fahrtenbuch-blazorweb-${{ github.event.inputs.stage }}"
+            IMAGE_NAME="tim153/fahrtenbuch-blazorweb"
+            docker pull $IMAGE_NAME:${{ github.event.inputs.image_tag }}
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+            docker run -d --name $CONTAINER_NAME -p $PORT:80 \
+              -e "DOTNET_ENVIRONMENT=${{ github.event.inputs.stage }}" \
+              -e "Auth0__Domain=${{ secrets.AUTH0_DOMAIN }}" \
+              -e "Auth0__ClientId=${{ secrets.AUTH0_CLIENT_ID }}" \
+              -e "Auth0__ClientSecret=${{ secrets.AUTH0_CLIENT_SECRET }}" \
+              -e "Auth0__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
+              -e "ApiSettings__BaseUrl=${{ secrets.API_BASE_URL }}" \
+              $IMAGE_NAME:${{ github.event.inputs.image_tag }}

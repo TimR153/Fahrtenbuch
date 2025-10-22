@@ -1,4 +1,4 @@
-name: Build Docker Image
+name: Build Blazor Web Docker Image
 
 on:
   workflow_dispatch:
@@ -6,10 +6,10 @@ on:
       branch:
         description: 'Branch to build'
         required: true
-        default: 'main'
+        default: 'master'
 
 env:
-  IMAGE_NAME: tim153/fahrtenbuch
+  IMAGE_NAME: tim153/fahrtenbuch-blazorweb
 
 jobs:
   build-and-push:
@@ -32,7 +32,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./Fahrtenbuch.Web
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
