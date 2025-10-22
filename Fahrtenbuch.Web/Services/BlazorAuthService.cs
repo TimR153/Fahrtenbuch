@@ -14,7 +14,7 @@ namespace Fahrtenbuch.Web.Services
 
         public Task LoginAsync(string returnUrl = "/")
         {
-            _navigationManager.NavigateTo(Constants.LoginPath, forceLoad: true);
+            _navigationManager.NavigateTo(Constants.LoginUri, forceLoad: true);
             return Task.CompletedTask;
         }
 
