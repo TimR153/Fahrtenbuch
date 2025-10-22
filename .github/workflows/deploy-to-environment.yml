@@ -53,6 +53,7 @@ jobs:
               -e "ConnectionStrings__DefaultConnection=Host=pg-fahrtenbuch;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
               -e "Auth0__Domain=${{ secrets.AUTH0_DOMAIN }}" \
               -e "Auth0__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
+              -e "Proxy__KnownProxies=${{ secrets.KNOWN_PROXIES }}" \
               $IMAGE_NAME:${{ github.event.inputs.image_tag }}
 
       - name: Deploy Blazor Web
@@ -75,4 +76,5 @@ jobs:
               -e "Auth0__ClientSecret=${{ secrets.AUTH0_CLIENT_SECRET }}" \
               -e "Auth0__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
               -e "ApiSettings__BaseUrl=${{ secrets.API_BASE_URL }}" \
+              -e "Proxy__KnownProxies=${{ secrets.KNOWN_PROXIES }}" \
               $IMAGE_NAME:${{ github.event.inputs.image_tag }}
