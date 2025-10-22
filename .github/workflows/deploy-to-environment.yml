@@ -48,7 +48,7 @@ jobs:
             docker pull $IMAGE_NAME:${{ github.event.inputs.image_tag }}
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
-            docker run -d --name $CONTAINER_NAME -p $PORT:8081 \
+            docker run -d --name $CONTAINER_NAME -p $PORT:80 \
               -e "DOTNET_ENVIRONMENT=${{ github.event.inputs.stage }}" \
               -e "ConnectionStrings__DefaultConnection=Host=pg-fahrtenbuch;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
               -e "Auth0__Domain=${{ secrets.AUTH0_DOMAIN }}" \
@@ -68,7 +68,7 @@ jobs:
             docker pull $IMAGE_NAME:${{ github.event.inputs.image_tag }}
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
-            docker run -d --name $CONTAINER_NAME -p $PORT:8081 \
+            docker run -d --name $CONTAINER_NAME -p $PORT:80 \
               -e "DOTNET_ENVIRONMENT=${{ github.event.inputs.stage }}" \
               -e "Auth0__Domain=${{ secrets.AUTH0_DOMAIN }}" \
               -e "Auth0__ClientId=${{ secrets.AUTH0_CLIENT_ID }}" \
