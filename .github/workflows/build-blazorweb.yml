@@ -37,5 +37,6 @@ jobs:
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.IMAGE_NAME }}:${{ github.event.inputs.branch }}
+            ${{ env.IMAGE_NAME }}:${{ github.event.inputs.branch.replace('/', '-') }}
             ${{ github.event.inputs.branch == 'main' && format('{0}:latest', env.IMAGE_NAME) || '' }}
+
