@@ -4,9 +4,12 @@ using Fahrtenbuch.Web.Api.Authentification;
 using Fahrtenbuch.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Security.Claims;
 
 internal class Program
@@ -16,10 +19,11 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         ConfigureServices(builder);
+        var proxyOptions = builder.Configuration.GetSection(ProxyOptions.RootElement).Get<ProxyOptions>() ?? new ProxyOptions();
 
         var app = builder.Build();
 
-        ConfigureMiddleware(app);
+        ConfigureMiddleware(app, proxyOptions);
 
         app.Run();
     }
@@ -46,6 +50,7 @@ internal class Program
         builder.Services.AddAuthorization();
 
         builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+        builder.Services.Configure<ProxyOptions>(builder.Configuration.GetSection(Auth0Options.RootElement));
     }
 
     private static void ConfigureAuth0(IServiceCollection services, IConfiguration configuration)
@@ -66,7 +71,7 @@ internal class Program
             });
     }
 
-    private static void ConfigureMiddleware(WebApplication app)
+    private static void ConfigureMiddleware(WebApplication app, ProxyOptions proxyOptions)
     {
         if (app.Environment.IsDevelopment())
         {
@@ -74,10 +79,24 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        var forwardedHeadersOptions = new ForwardedHeadersOptions
         {
-            ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
-        });
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        };
+
+        if (!string.IsNullOrEmpty(proxyOptions.KnownProxies))
+        {
+            var proxies = proxyOptions.KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var proxy in proxies)
+            {
+                if (IPAddress.TryParse(proxy.Trim(), out var ip))
+                {
+                    forwardedHeadersOptions.KnownProxies.Add(ip);
+                }
+            }
+        }
+
+        app.UseForwardedHeaders(forwardedHeadersOptions);
 
         app.UseHttpsRedirection();
 

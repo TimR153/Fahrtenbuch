@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using MudBlazor.Services;
+using System.Net;
 
 internal class Program
 {
@@ -18,10 +19,11 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         ConfigureServices(builder.Services, builder.Configuration);
+        var proxyOptions = builder.Configuration.GetSection(ProxyOptions.RootElement).Get<ProxyOptions>() ?? new ProxyOptions();
 
         var app = builder.Build();
 
-        ConfigureMiddleware(app);
+        ConfigureMiddleware(app, proxyOptions);
 
         ConfigureEndpoints(app);
 
@@ -51,6 +53,7 @@ internal class Program
             Fahrtenbuch.Web.Extensions.ServiceCollectionExtensions.AddHttpClient<IUserInfoClient, UserInfoClient>(services, apiOptions.BaseUrl);
             Fahrtenbuch.Web.Extensions.ServiceCollectionExtensions.AddHttpClient<IWeatherForecastClient, WeatherForecastClient>(services, apiOptions.BaseUrl);
         }
+        services.Configure<ProxyOptions>(configuration.GetSection(Auth0Options.RootElement));
     }
 
     private static void RegisterAuth0(IServiceCollection services, IConfiguration configuration)
@@ -71,7 +74,7 @@ internal class Program
         });
     }
 
-    private static void ConfigureMiddleware(WebApplication app)
+    private static void ConfigureMiddleware(WebApplication app, ProxyOptions proxyOptions)
     {
         if (!app.Environment.IsDevelopment())
         {
@@ -79,10 +82,24 @@ internal class Program
             app.UseHsts();
         }
 
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        var forwardedHeadersOptions = new ForwardedHeadersOptions
         {
-            ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
-        });
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        };
+
+        if (!string.IsNullOrEmpty(proxyOptions.KnownProxies))
+        {
+            var proxies = proxyOptions.KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var proxy in proxies)
+            {
+                if (IPAddress.TryParse(proxy.Trim(), out var ip))
+                {
+                    forwardedHeadersOptions.KnownProxies.Add(ip);
+                }
+            }
+        }
+
+        app.UseForwardedHeaders(forwardedHeadersOptions);
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
