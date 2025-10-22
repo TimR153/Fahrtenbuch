@@ -4,6 +4,7 @@ using Fahrtenbuch.Web.Api.Authentification;
 using Fahrtenbuch.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -73,7 +74,11 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        var forwardedHeadersOptions = new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedProto
+        };
+        app.UseForwardedHeaders(forwardedHeadersOptions);
         app.UseHttpsRedirection();
 
         app.UseRouting();
