@@ -85,7 +85,7 @@ internal class Program
 
     private static void ConfigureEndpoints(WebApplication app)
     {
-        app.MapGet(Fahrtenbuch.Web.Constants.LoginUri, async (HttpContext httpContext, string returnUrl = "/") =>
+        app.MapGet(Constants.LoginUri, async (HttpContext httpContext, string returnUrl = "/") =>
         {
             var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
                 .WithRedirectUri(returnUrl)
@@ -94,7 +94,7 @@ internal class Program
             await httpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
         });
 
-        app.MapGet(Fahrtenbuch.Web.Constants.LogoutUri, async (HttpContext httpContext) =>
+        app.MapGet(Constants.LogoutUri, async (HttpContext httpContext) =>
         {
             var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
                 .WithRedirectUri("/")
@@ -104,13 +104,13 @@ internal class Program
             await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         });
 
-        app.MapGet(Fahrtenbuch.Web.Constants.InternalDataUri, () =>
+        app.MapGet(Constants.InternalDataUri, () =>
         {
             var data = Enumerable.Range(1, 5).Select(_ => Random.Shared.Next(1, 100)).ToArray();
             return data;
         }).RequireAuthorization();
 
-        app.MapGet(Fahrtenbuch.Web.Constants.ExternalDataUri, async (HttpClient httpClient) =>
+        app.MapGet(Constants.ExternalDataUri, async (HttpClient httpClient) =>
         {
             return await httpClient.GetFromJsonAsync<int[]>("data");
         }).RequireAuthorization();

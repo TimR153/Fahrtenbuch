@@ -14,13 +14,13 @@ namespace Fahrtenbuch.Web.Services
 
         public Task LoginAsync(string returnUrl = "/")
         {
-            _navigationManager.NavigateTo(Constants.LoginUri, forceLoad: true);
+            _navigationManager.NavigateTo(Fahrtenbuch.Shared.Constants.LoginUri, forceLoad: true);
             return Task.CompletedTask;
         }
 
         public Task LogoutAsync()
         {
-            _navigationManager.NavigateTo(Constants.LogoutPath, forceLoad: true);
+            _navigationManager.NavigateTo(Fahrtenbuch.Shared.Constants.LogoutUri, forceLoad: true);
             return Task.CompletedTask;
         }
     }
