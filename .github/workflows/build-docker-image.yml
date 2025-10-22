@@ -6,7 +6,7 @@ on:
       branch:
         description: 'Branch to build'
         required: true
-        default: 'main'
+        default: 'master'
 
 env:
   IMAGE_NAME: tim153/fahrtenbuch
