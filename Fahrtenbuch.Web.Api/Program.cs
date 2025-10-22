@@ -74,11 +74,11 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        var forwardedHeadersOptions = new ForwardedHeadersOptions
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
         {
-            ForwardedHeaders = ForwardedHeaders.XForwardedProto
-        };
-        app.UseForwardedHeaders(forwardedHeadersOptions);
+            ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
+        });
+
         app.UseHttpsRedirection();
 
         app.UseRouting();

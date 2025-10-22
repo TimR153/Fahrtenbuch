@@ -8,6 +8,7 @@ using Fahrtenbuch.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using MudBlazor.Services;
 
 internal class Program
@@ -77,6 +78,11 @@ internal class Program
             app.UseExceptionHandler("/Error", createScopeForErrors: true);
             app.UseHsts();
         }
+
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
+        });
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
