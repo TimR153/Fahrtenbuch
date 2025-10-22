@@ -36,6 +36,5 @@ jobs:
           file: Fahrtenbuch.Web.Api/Dockerfile
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.IMAGE_NAME }}:${{ github.event.inputs.branch }}
-            ${{ github.event.inputs.branch == 'main' && format('{0}:latest', env.IMAGE_NAME) || '' }}
+              ${{ env.IMAGE_NAME }}:${{ github.sha }}
+              ${{ github.event.inputs.branch == 'master' && format('{0}:latest', env.IMAGE_NAME) || '' }}
