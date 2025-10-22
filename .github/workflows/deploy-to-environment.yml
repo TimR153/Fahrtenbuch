@@ -1,0 +1,44 @@
+name: Deploy to Stage
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag to deploy (e.g., commit SHA)'
+        required: true
+      stage:
+        description: 'Deployment stage'
+        required: true
+        type: choice
+        options:
+          - quality
+          - staging
+          - production
+        default: quality
+
+env:
+  IMAGE_NAME: tim153/fahrtenbuch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.stage }}
+    steps:
+      - name: Show deployment info
+        run: |
+          echo "Deploying image ${IMAGE_NAME}:${{ github.event.inputs.image_tag }} to stage ${{ github.event.inputs.stage }} on port ${{ secrets.DEPLOY_PORT }}"
+
+      - name: Deploy application via SSH
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets[ github.event.inputs.stage | toUpperCase() + '_HOST' ] }}
+          key: ${{ secrets[ github.event.inputs.stage | toUpperCase() + '_SSH_PRIVATE_KEY' ] }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script: |
+            PORT=${{ secrets.DEPLOY_PORT }}
+            CONTAINER_NAME="fahrtenbuch-${{ github.event.inputs.stage }}"
+
+            docker pull ${IMAGE_NAME}:${{ github.event.inputs.image_tag }}
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+            docker run -d --name $CONTAINER_NAME -p $PORT:80 ${IMAGE_NAME}:${{ github.event.inputs.image_tag }}
