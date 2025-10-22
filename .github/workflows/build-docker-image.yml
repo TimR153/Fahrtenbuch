@@ -35,8 +35,6 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ github.event.inputs.branch }}
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-      - name: Output image tag
-        run: echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+            ${{ env.IMAGE_NAME }}:${{ github.event.inputs.branch }}
+            ${{ github.event.inputs.branch == 'main' && format('{0}:latest', env.IMAGE_NAME) || '' }}
