@@ -28,7 +28,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
           script: |
-            cd /home/${{ secrets.SSH_USERNAME }}/app
+            mkdir -p /home/${{ secrets.SSH_USERNAME }}/fahrtenbuch
+            cd /home/${{ secrets.SSH_USERNAME }}/fahrtenbuch
 
             export IMAGE_TAG='${{ github.event.inputs.image_tag }}'
             export STAGE='${{ github.event.inputs.stage }}'
