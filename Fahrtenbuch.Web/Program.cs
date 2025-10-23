@@ -104,6 +104,8 @@ internal class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAntiforgery();
+        app.UseAuthentication();
+        app.UseAuthorization();
     }
 
     private static void ConfigureEndpoints(WebApplication app)
