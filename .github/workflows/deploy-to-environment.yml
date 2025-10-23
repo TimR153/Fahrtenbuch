@@ -21,9 +21,19 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.stage }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key for scp
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          
       - name: Copy docker-compose.yml to server
         run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USERNAME }}/fahrtenbuch/
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USERNAME }}/fahrtenbuch/
     
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.8
