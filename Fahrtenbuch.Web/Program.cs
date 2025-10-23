@@ -72,6 +72,12 @@ internal class Program
         {
             options.Audience = auth0Options.Audience;
         });
+
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
+
     }
 
     private static void ConfigureMiddleware(WebApplication app, ProxyOptions proxyOptions)
@@ -87,26 +93,34 @@ internal class Program
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         };
 
-        if (!string.IsNullOrEmpty(proxyOptions.KnownProxies))
+        if (app.Environment.IsDevelopment())
         {
-            var proxies = proxyOptions.KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            foreach (var proxy in proxies)
+            forwardedHeadersOptions.KnownNetworks.Clear();
+            forwardedHeadersOptions.KnownProxies.Clear();
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(proxyOptions.KnownProxies))
             {
-                if (IPAddress.TryParse(proxy.Trim(), out var ip))
+                var proxies = proxyOptions.KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var proxy in proxies)
                 {
-                    forwardedHeadersOptions.KnownProxies.Add(ip);
+                    if (IPAddress.TryParse(proxy.Trim(), out var ip))
+                    {
+                        forwardedHeadersOptions.KnownProxies.Add(ip);
+                    }
                 }
             }
         }
 
         app.UseForwardedHeaders(forwardedHeadersOptions);
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAntiforgery();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
     }
 
     private static void ConfigureEndpoints(WebApplication app)
