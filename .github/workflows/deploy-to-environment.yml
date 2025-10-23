@@ -21,60 +21,43 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.stage }}
     steps:
-      - name: Deploy Web API
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          username: ${{ secrets.SSH_USERNAME }}
-          script: |
-            # Prüfen, ob PostgreSQL läuft, sonst starten
-            if ! docker ps --filter "name=pg-fahrtenbuch" --format '{{.Names}}' | grep -q pg-fahrtenbuch; then
-              echo "Starte PostgreSQL"
-              docker run -d --name pg-fahrtenbuch \
-                -e POSTGRES_USER=${{ secrets.DB_USER }} \
-                -e POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
-                -e POSTGRES_DB=${{ secrets.DB_NAME }} \
-                -v pgdata:/var/lib/postgresql/data \
-                postgres:15
-            else
-              echo "PostgreSQL läuft bereits"
-            fi
-            
-            # Deployment der Web API
-            PORT=${{ secrets.API_DEPLOY_PORT }}
-            CONTAINER_NAME="fahrtenbuch-webapi-${{ github.event.inputs.stage }}"
-            IMAGE_NAME="tim153/fahrtenbuch-webapi"
-            docker pull $IMAGE_NAME:${{ github.event.inputs.image_tag }}
-            docker stop $CONTAINER_NAME || true
-            docker rm $CONTAINER_NAME || true
-            docker run -d --name $CONTAINER_NAME -p $PORT:8080 \
-              -e "DOTNET_ENVIRONMENT=${{ github.event.inputs.stage }}" \
-              -e "ConnectionStrings__DefaultConnection=Host=pg-fahrtenbuch;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
-              -e "Auth0__Domain=${{ secrets.AUTH0_DOMAIN }}" \
-              -e "Auth0__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
-              -e "Proxy__KnownProxies=${{ secrets.KNOWN_PROXIES }}" \
-              $IMAGE_NAME:${{ github.event.inputs.image_tag }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Deploy Blazor Web
+      - name: Setup SSH key for scp
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          
+      - name: Copy docker-compose.yml to server
+        run: |
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USERNAME }}/fahrtenbuch/
+    
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.HOST }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
           script: |
-            PORT=${{ secrets.WEB_DEPLOY_PORT }}
-            CONTAINER_NAME="fahrtenbuch-blazorweb-${{ github.event.inputs.stage }}"
-            IMAGE_NAME="tim153/fahrtenbuch-blazorweb"
-            docker pull $IMAGE_NAME:${{ github.event.inputs.image_tag }}
-            docker stop $CONTAINER_NAME || true
-            docker rm $CONTAINER_NAME || true
-            docker run -d --name $CONTAINER_NAME -p $PORT:8080 \
-              -e "DOTNET_ENVIRONMENT=${{ github.event.inputs.stage }}" \
-              -e "Auth0__Domain=${{ secrets.AUTH0_DOMAIN }}" \
-              -e "Auth0__ClientId=${{ secrets.AUTH0_CLIENT_ID }}" \
-              -e "Auth0__ClientSecret=${{ secrets.AUTH0_CLIENT_SECRET }}" \
-              -e "Auth0__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
-              -e "ApiSettings__BaseUrl=${{ secrets.API_BASE_URL }}" \
-              -e "Proxy__KnownProxies=${{ secrets.KNOWN_PROXIES }}" \
-              $IMAGE_NAME:${{ github.event.inputs.image_tag }}
+            mkdir -p /home/${{ secrets.SSH_USERNAME }}/fahrtenbuch
+            cd /home/${{ secrets.SSH_USERNAME }}/fahrtenbuch
+
+            export IMAGE_TAG='${{ github.event.inputs.image_tag }}'
+            export STAGE='${{ github.event.inputs.stage }}'
+            export DB_USER='${{ secrets.DB_USER }}'
+            export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
+            export DB_NAME='${{ secrets.DB_NAME }}'
+            export AUTH0_DOMAIN='${{ secrets.AUTH0_DOMAIN }}'
+            export AUTH0_CLIENT_ID='${{ secrets.AUTH0_CLIENT_ID }}'
+            export AUTH0_CLIENT_SECRET='${{ secrets.AUTH0_CLIENT_SECRET }}'
+            export AUTH0_AUDIENCE='${{ secrets.AUTH0_AUDIENCE }}'
+            export API_BASE_URL='${{ secrets.API_BASE_URL }}'
+            export KNOWN_PROXIES='${{ secrets.KNOWN_PROXIES }}'
+            export API_DEPLOY_PORT='${{ secrets.API_DEPLOY_PORT }}'
+            export WEB_DEPLOY_PORT='${{ secrets.WEB_DEPLOY_PORT }}'
+
+            docker-compose pull
+            docker-compose up -d
