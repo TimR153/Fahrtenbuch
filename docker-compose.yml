@@ -20,20 +20,20 @@ services:
       - pg-fahrtenbuch
     environment:
       TZ: Europe/Berlin
-      DOTNET_ENVIRONMENT: ${STAGE}
+      DOTNET_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ConnectionStrings__DefaultConnection: Host=pg-fahrtenbuch;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}
       Auth0__Domain: ${AUTH0_DOMAIN}
       Auth0__Audience: ${AUTH0_AUDIENCE}
       Proxy__KnownProxies: ${KNOWN_PROXIES}
     ports:
-      - "${API_DEPLOY_PORT}:8081"
+      - "${API_DEPLOY_PORT}:8080"
 
   fahrtenbuch-blazorweb:
     image: tim153/fahrtenbuch-blazorweb:${IMAGE_TAG}
     container_name: fahrtenbuch-blazorweb-${STAGE}
     environment:
       TZ: Europe/Berlin
-      DOTNET_ENVIRONMENT: ${STAGE}
+      DOTNET_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       Auth0__Domain: ${AUTH0_DOMAIN}
       Auth0__ClientId: ${AUTH0_CLIENT_ID}
       Auth0__ClientSecret: ${AUTH0_CLIENT_SECRET}
@@ -41,7 +41,7 @@ services:
       ApiSettings__BaseUrl: ${API_BASE_URL}
       Proxy__KnownProxies: ${KNOWN_PROXIES}
     ports:
-      - "${WEB_DEPLOY_PORT}:8081"
+      - "${WEB_DEPLOY_PORT}:8080"
 
 volumes:
   pgdata:
