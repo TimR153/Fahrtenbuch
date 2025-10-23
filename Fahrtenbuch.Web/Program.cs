@@ -101,11 +101,12 @@ internal class Program
 
         app.UseForwardedHeaders(forwardedHeadersOptions);
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAntiforgery();
-        app.UseAuthentication();
-        app.UseAuthorization();
     }
 
     private static void ConfigureEndpoints(WebApplication app)
