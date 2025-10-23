@@ -42,5 +42,5 @@ jobs:
             export API_DEPLOY_PORT='${{ secrets.API_DEPLOY_PORT }}'
             export WEB_DEPLOY_PORT='${{ secrets.WEB_DEPLOY_PORT }}'
 
-            docker compose pull
-            docker compose up -d
+            docker-compose pull
+            docker-compose up -d
