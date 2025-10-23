@@ -28,6 +28,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
           script: |
+            cd /home/${{ secrets.SSH_USERNAME }}/app
+
             export IMAGE_TAG='${{ github.event.inputs.image_tag }}'
             export STAGE='${{ github.event.inputs.stage }}'
             export DB_USER='${{ secrets.DB_USER }}'
